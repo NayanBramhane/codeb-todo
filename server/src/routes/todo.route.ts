@@ -11,6 +11,7 @@ import { validate } from '../middleware/validate.js';
 
 const router = express.Router();
 
+// create todo
 router.post(
   '/',
   isAuthenticated,
@@ -30,8 +31,10 @@ router.post(
   createTodo,
 );
 
-router.get('/my', isAuthenticated, getTodo);
+// get all todos for authenticated user
+router.get('/', isAuthenticated, getTodo);
 
+// update todo
 router.put(
   '/:id',
   isAuthenticated,
@@ -40,6 +43,7 @@ router.put(
   updateTodo,
 );
 
+// delete todo
 router.delete(
   '/:id',
   isAuthenticated,
