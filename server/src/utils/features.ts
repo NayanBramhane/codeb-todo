@@ -4,7 +4,7 @@ import mongoose from 'mongoose';
 
 // sendCookie function
 export const sendCookie = (
-  id: mongoose.Types.ObjectId,
+  _id: mongoose.Types.ObjectId,
   res: Response,
   message: string,
   statusCode: number = 200,
@@ -13,7 +13,7 @@ export const sendCookie = (
     throw new Error('JWT_SECRET is not defined in environment variables');
   }
 
-  const token = jwt.sign({ id }, process.env.JWT_SECRET);
+  const token = jwt.sign({ _id }, process.env.JWT_SECRET);
 
   res
     .status(statusCode)
