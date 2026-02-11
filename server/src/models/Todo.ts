@@ -5,6 +5,7 @@ export interface ITodo {
   title: string;
   description?: string;
   owner: mongoose.Types.ObjectId;
+  isCompleted: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -27,6 +28,10 @@ const todoSchema = new Schema<ITodo>(
       ref: 'User',
       required: true,
     },
+    isCompleted: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true },
 );
@@ -35,7 +40,7 @@ const todoSchema = new Schema<ITodo>(
 todoSchema.index({ owner: 1, createdAt: -1 });
 
 // mongoose model for Todo
-const Todo:Model<ITodo> = mongoose.model<ITodo>('Todo', todoSchema);
+const Todo: Model<ITodo> = mongoose.model<ITodo>('Todo', todoSchema);
 
 // export the Todo model
 export default Todo;
