@@ -1,9 +1,15 @@
-import express, { type Request, type Response } from 'express';
-const app = express();
+import app from './app.js';
+import dotenv from 'dotenv';
+import { connectDB } from './config/db.js';
 
-app.use(express.json());
-app.get('/hello', (req: Request, res: Response) => {
-  res.send(`Hello bye, ${req.query.person}!`);
-});
+dotenv.config();
 
-app.listen(3000);
+const startServer = async () => {
+  await connectDB(); // Connect DB first
+
+  app.listen(process.env.PORT || 4000, () => {
+    console.log(`Server running on port ${process.env.PORT || 4000}`);
+  });
+};
+
+startServer();
