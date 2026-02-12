@@ -79,6 +79,14 @@ export const updateTodo = async (
 
     const { title, description, isCompleted } = req.body;
 
+    if (
+      title === undefined &&
+      description === undefined &&
+      isCompleted === undefined
+    ) {
+      return next(new ErrorHandler('No valid fields provided for update', 400));
+    }
+
     if (title !== undefined) todo.title = title;
     if (description !== undefined) todo.description = description;
     if (isCompleted !== undefined) todo.isCompleted = isCompleted;
