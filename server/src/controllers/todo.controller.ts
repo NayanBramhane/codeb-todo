@@ -41,12 +41,26 @@ export const getTodo = async (
 
     const skip = (page - 1) * limit;
 
+    const query: any = { owner: req.user._id };
+
+    if (req.query.keyword) {
+      // Escaping special regex characters ensures that if a user searches for
+      // a sentence with a "?" or ".", it doesn't break the query.
+      const safeKeyword = (req.query.keyword as string)
+        .trim()
+        .replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+      const searchRegex = {
+        $regex: safeKeyword,
+        $options: 'i',
+      };
+
+      query.$or = [{ title: searchRegex }, { description: searchRegex }];
+    }
+
     const [todos, totalTodos] = await Promise.all([
-      Todo.find({ owner: req.user._id })
-        .sort({ createdAt: -1 })
-        .limit(limit)
-        .skip(skip),
-      Todo.countDocuments({ owner: req.user._id }),
+      Todo.find(query).sort({ createdAt: -1 }).limit(limit).skip(skip),
+      Todo.countDocuments(query),
     ]);
 
     const totalPages = Math.ceil(totalTodos / limit);

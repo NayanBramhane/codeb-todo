@@ -49,6 +49,10 @@ router.get(
       .optional()
       .isInt({ min: 1, max: 100 })
       .withMessage('Limit must be between 1 and 100'),
+    query('keyword')
+      .optional()
+      .isLength({ min: 3, max: 100 })
+      .withMessage('Search term must be between 3 and 100 characters'),
   ],
   validate,
   getTodo,
