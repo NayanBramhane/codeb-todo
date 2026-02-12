@@ -12,7 +12,7 @@ createRoot(document.getElementById("root")!).render(
     <BrowserRouter>
       <Toaster position="top-center" richColors /> 
       <Routes>
-        {/* Set Register as the index/first page */}
+        {/* Set Login as the index/first page */}
         <Route path="/" element={<Login />} />
         
         {/* Other routes */}
