@@ -6,7 +6,7 @@ import {
   updateTodo,
 } from '../controllers/todo.controller.js';
 import { isAuthenticated } from '../middleware/auth.js';
-import { body, param } from 'express-validator';
+import { body, param, query } from 'express-validator';
 import { validate } from '../middleware/validate.js';
 
 const router = express.Router();
@@ -26,19 +26,57 @@ router.post(
       .optional()
       .isLength({ max: 500 })
       .withMessage('Description too long'),
+
+    body('isCompleted')
+      .optional()
+      .isBoolean()
+      .withMessage('isCompleted must be a true or false value'),
   ],
   validate,
   createTodo,
 );
 
 // get all todos for authenticated user
-router.get('/', isAuthenticated, getTodo);
+router.get(
+  '/',
+  isAuthenticated,
+  [
+    query('page')
+      .optional()
+      .isInt({ min: 1 })
+      .withMessage('Page must be at least 1'),
+    query('limit')
+      .optional()
+      .isInt({ min: 1, max: 100 })
+      .withMessage('Limit must be between 1 and 100'),
+  ],
+  validate,
+  getTodo,
+);
 
 // update todo
 router.put(
   '/:id',
   isAuthenticated,
-  [param('id').isMongoId().withMessage('Invalid Todo ID')],
+  [
+    param('id').isMongoId().withMessage('Invalid Todo ID'),
+    body('title')
+      .optional()
+      .notEmpty()
+      .withMessage('Title is required')
+      .isLength({ max: 100 })
+      .withMessage('Title must be less than 100 characters'),
+
+    body('description')
+      .optional()
+      .isLength({ max: 500 })
+      .withMessage('Description too long'),
+
+    body('isCompleted')
+      .optional()
+      .isBoolean()
+      .withMessage('isCompleted must be a true or false value'),
+  ],
   validate,
   updateTodo,
 );
