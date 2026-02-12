@@ -40,3 +40,19 @@ export const buttonVariants = cva(
     },
   },
 );
+
+export interface Todo {
+  _id: string;
+  title: string;
+  description: string;
+  isCompleted: boolean;
+  createdAt: string;
+}
+
+export interface getTodosResponse {
+  success: boolean;
+  totalTodos: number;
+  totalPages: number;
+  todos: Todo[];
+  message?: string;
+}

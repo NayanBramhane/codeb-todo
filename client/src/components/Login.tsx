@@ -20,6 +20,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { loginSchema, type LoginValues } from "@/schemas/auth.schema";
 import { loginService } from "@/services/login.service";
+import { useNavigate } from "react-router";
 
 export function Login({ className, ...props }: React.ComponentProps<"div">) {
   // Initialize form with Zod resolver
@@ -31,8 +32,12 @@ export function Login({ className, ...props }: React.ComponentProps<"div">) {
     },
   });
 
+  const navigate = useNavigate();
+
   async function onSubmit(data: LoginValues) {
-    loginService(data);
+    if (await loginService(data)) {
+      navigate("/dashboard");
+    }
   }
 
   return (
