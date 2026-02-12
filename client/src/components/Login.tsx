@@ -1,3 +1,7 @@
+import * as React from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Controller, useForm } from "react-hook-form";
+
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
@@ -9,13 +13,28 @@ import {
 } from "@/components/ui/card";
 import {
   Field,
-  FieldDescription,
+  FieldError,
   FieldGroup,
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { loginSchema, type LoginValues } from "@/schemas/auth.schema";
+import { loginService } from "@/services/login.service";
 
 export function Login({ className, ...props }: React.ComponentProps<"div">) {
+  // Initialize form with Zod resolver
+  const form = useForm<LoginValues>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
+
+  async function onSubmit(data: LoginValues) {
+    loginService(data);
+  }
+
   return (
     <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
       <div className="w-full max-w-sm">
@@ -28,28 +47,68 @@ export function Login({ className, ...props }: React.ComponentProps<"div">) {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <form>
+              <form id="login-form" onSubmit={form.handleSubmit(onSubmit)}>
                 <FieldGroup>
+                  {/* Email Field */}
+                  <Controller
+                    name="email"
+                    control={form.control}
+                    render={({ field, fieldState }) => (
+                      <Field data-invalid={fieldState.invalid}>
+                        <FieldLabel htmlFor="email">Email</FieldLabel>
+                        <Input
+                          {...field}
+                          id="email"
+                          type="email"
+                          placeholder="m@example.com"
+                          aria-invalid={fieldState.invalid}
+                        />
+                        {fieldState.invalid && (
+                          <FieldError errors={[fieldState.error]} />
+                        )}
+                      </Field>
+                    )}
+                  />
+
+                  {/* Password Field */}
+                  <Controller
+                    name="password"
+                    control={form.control}
+                    render={({ field, fieldState }) => (
+                      <Field data-invalid={fieldState.invalid}>
+                        <div className="flex items-center justify-between">
+                          <FieldLabel htmlFor="password">Password</FieldLabel>
+                        </div>
+                        <Input
+                          {...field}
+                          id="password"
+                          type="password"
+                          aria-invalid={fieldState.invalid}
+                        />
+                        {fieldState.invalid && (
+                          <FieldError errors={[fieldState.error]} />
+                        )}
+                      </Field>
+                    )}
+                  />
+
                   <Field>
-                    <FieldLabel htmlFor="email">Email</FieldLabel>
-                    <Input
-                      id="email"
-                      type="email"
-                      placeholder="m@example.com"
-                      required
-                    />
-                  </Field>
-                  <Field>
-                    <div className="flex items-center">
-                      <FieldLabel htmlFor="password">Password</FieldLabel>
+                    <Button
+                      type="submit"
+                      className="w-full"
+                      disabled={form.formState.isSubmitting}
+                    >
+                      {form.formState.isSubmitting ? "Logging in..." : "Login"}
+                    </Button>
+                    <div className="text-center text-sm">
+                      Don&apos;t have an account?{" "}
+                      <a
+                        href="/register"
+                        className="underline hover:text-primary"
+                      >
+                        Sign up
+                      </a>
                     </div>
-                    <Input id="password" type="password" required />
-                  </Field>
-                  <Field>
-                    <Button type="submit">Login</Button>
-                    <FieldDescription className="text-center">
-                      Don&apos;t have an account? <a href="/register">Sign up</a>
-                    </FieldDescription>
                   </Field>
                 </FieldGroup>
               </form>
