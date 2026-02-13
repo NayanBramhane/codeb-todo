@@ -19,6 +19,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { registerSchema, type RegisterValues } from "@/schemas/auth.schema";
 import { registerService } from "@/services/auth.service";
+import { useNavigate } from "react-router";
 
 export default function Register({
   ...props
@@ -32,8 +33,11 @@ export default function Register({
     },
   });
 
+  const navigate = useNavigate();
   async function onSubmit(data: RegisterValues) {
-    registerService(data);
+    if (await registerService(data)) {
+      navigate("/login");
+    }
   }
 
   return (

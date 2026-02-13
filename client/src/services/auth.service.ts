@@ -9,6 +9,7 @@ export async function loginService(data: LoginValues): Promise<boolean> {
     const response = await axios.post("/api/v1/users/login", data, {
       withCredentials: true, // for jwt
     });
+    console.log(response);
 
     toast.success(response.data.message || "Welcome back!");
     return true;
@@ -33,14 +34,16 @@ export const logoutService = async () => {
 };
 
 // Registration function
-export async function registerService(data: RegisterValues) {
+export async function registerService(data: RegisterValues): Promise<boolean> {
   try {
     const response = await axios.post("/api/v1/users/register", data);
     toast.success(response.data.message || "Registration successful!");
+    return true;
   } catch (err) {
     const error = err as AxiosError<{ message: string }>;
 
     const errorMsg = error.response?.data?.message || "Something went wrong";
     toast.error(errorMsg);
+    return false;
   }
 }

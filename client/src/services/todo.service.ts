@@ -1,5 +1,6 @@
 import type { getTodosResponse } from "@/lib/utils";
-import axios from "axios";
+import type { TodoFormValues } from "@/schemas/todo.schema";
+import axios, { AxiosError } from "axios";
 
 // get all todos with pagination and search
 export const getTodos = async (
@@ -21,28 +22,40 @@ export const getTodos = async (
 };
 
 // create a new todo
-export const createTodo = async (title: string, description: string) => {
-  const response = await axios.post("/api/v1/todos", { title, description });
-  return response.data;
+export const createTodo = async (payload: TodoFormValues) => {
+  try {
+    await axios.post("/api/v1/todos", payload);
+    return true;
+  } catch (err) {
+    const error = err as AxiosError<{ message: string }>;
+    console.log(error);
+    return false;
+  }
 };
 
 // delete a todo by id
 export const deleteTodo = async (id: string) => {
-  const response = await axios.delete(`/api/v1/todos/${id}`);
-  return response.data;
+  try {
+    await axios.delete(`/api/v1/todos/${id}`);
+    return true;
+  } catch (err) {
+    const error = err as AxiosError<{ message: string }>;
+    console.log(error);
+    return false;
+  }
 };
 
 // update a todo by id
 export const updateTodo = async (
   id: string,
-  title: string,
-  description: string,
-  isCompleted: boolean,
+  data: { title?: string; isCompleted?: boolean; description?: string },
 ) => {
-  const response = await axios.put(`/api/v1/todos/${id}`, {
-    title,
-    description,
-    isCompleted,
-  });
-  return response.data;
+  try {
+    await axios.put(`/api/v1/todos/${id}`, data);
+    return true;
+  } catch (err) {
+    const error = err as AxiosError<{ message: string }>;
+    console.log(error);
+    return false;
+  }
 };
