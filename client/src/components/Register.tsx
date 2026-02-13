@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { registerSchema, type RegisterValues } from "@/schemas/auth.schema";
-import { registerService } from "@/services/register.service";
+import { registerService } from "@/services/auth.service";
 
 export default function Register({
   ...props

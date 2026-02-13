@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { loginSchema, type LoginValues } from "@/schemas/auth.schema";
-import { loginService } from "@/services/login.service";
+import { loginService } from "@/services/auth.service";
 import { useNavigate } from "react-router";
 
 export function Login({ className, ...props }: React.ComponentProps<"div">) {

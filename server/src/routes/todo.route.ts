@@ -19,8 +19,8 @@ router.post(
     body('title')
       .notEmpty()
       .withMessage('Title is required')
-      .isLength({ max: 100 })
-      .withMessage('Title must be less than 100 characters'),
+      .isLength({ max: 50 })
+      .withMessage('Title must be less than 50 characters'),
 
     body('description')
       .optional()

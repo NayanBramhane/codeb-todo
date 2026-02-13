@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Plus, LogOut } from "lucide-react";
 import { toast } from "sonner";
 import type { Todo } from "@/lib/utils";
-import { logoutService } from "@/services/logout.service";
+import { logoutService } from "@/services/auth.service";
 import { useNavigate } from "react-router";
 
 export default function Dashboard() {
