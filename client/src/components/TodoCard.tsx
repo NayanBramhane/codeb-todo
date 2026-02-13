@@ -62,7 +62,7 @@ export function TodoCard({ todo, onEdit, onDelete }: TodoCardProps) {
           variant="ghost"
           size="icon"
           onClick={() => onEdit?.(todo._id)}
-          className="h-8 w-8 hover:text-primary"
+          className="h-8 w-8 hover:text-primary hover:cursor-pointer"
         >
           <Edit3 className="h-4 w-4" />
         </Button>
@@ -70,7 +70,7 @@ export function TodoCard({ todo, onEdit, onDelete }: TodoCardProps) {
           variant="ghost"
           size="icon"
           onClick={() => onDelete?.(todo._id)}
-          className="h-8 w-8 hover:text-destructive"
+          className="h-8 w-8 hover:text-destructive hover:cursor-pointer"
         >
           <Trash2 className="h-4 w-4" />
         </Button>
