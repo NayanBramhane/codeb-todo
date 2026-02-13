@@ -21,9 +21,15 @@ interface TodoCardProps {
   todo: Todo;
   onEdit?: (id: string) => void;
   onDelete?: (id: string) => void;
+  onToggleCompleted?: (id: string) => void;
 }
 
-export function TodoCard({ todo, onEdit, onDelete }: TodoCardProps) {
+export function TodoCard({
+  todo,
+  onEdit,
+  onDelete,
+  onToggleCompleted,
+}: TodoCardProps) {
   return (
     <Card
       className={todo.isCompleted ? "bg-muted/40 border-dashed" : "shadow-sm"}
@@ -44,11 +50,18 @@ export function TodoCard({ todo, onEdit, onDelete }: TodoCardProps) {
             })}
           </p>
         </div>
-        {todo.isCompleted ? (
-          <CheckCircle2 className="h-5 w-5 text-green-500" />
-        ) : (
-          <Circle className="h-5 w-5 text-muted-foreground" />
-        )}
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => onToggleCompleted?.(todo._id)}
+          className="h-8 w-8 hover:text-destructive hover:cursor-pointer"
+        >
+          {todo.isCompleted ? (
+            <CheckCircle2 className="h-5 w-5 text-green-500 hover:cursor-pointer" />
+          ) : (
+            <Circle className="h-5 w-5 text-muted-foreground hover:cursor-pointer" />
+          )}
+        </Button>
       </CardHeader>
 
       <CardContent>
