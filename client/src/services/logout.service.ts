@@ -2,7 +2,7 @@ import axios from "axios";
 
 export const logoutService = async () => {
   try {
-    const response = await axios.get("/api/api/v1/users/logout", {
+    const response = await axios.get("/api/v1/users/logout", {
       withCredentials: true,
     });
     return response.data;
