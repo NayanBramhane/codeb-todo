@@ -1,13 +1,13 @@
-// src/pages/Dashboard.tsx
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { getTodos } from "@/services/todo.service";
 import { TodoCard } from "@/components/TodoCard";
 import { Button } from "@/components/ui/button";
-import { Plus, LogOut } from "lucide-react";
+import { LogOut } from "lucide-react";
 import { toast } from "sonner";
 import type { Todo } from "@/lib/utils";
 import { logoutService } from "@/services/auth.service";
 import { useNavigate } from "react-router";
+import { TodoDialog } from "@/components/TodoDialog";
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -15,20 +15,21 @@ export default function Dashboard() {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchTodos = async () => {
-      try {
-        const data = await getTodos();
-        setTodos(data.todos);
-      } catch (error) {
-        toast.error("Could not fetch todos");
-        console.error("Error fetching todos:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchTodos();
+  const fetchTodos = useCallback(async () => {
+    try {
+      const data = await getTodos();
+      setTodos(data.todos);
+    } catch (error) {
+      toast.error("Could not fetch todos");
+      console.error("Error fetching todos:", error);
+    } finally {
+      setLoading(false);
+    }
   }, []);
+
+  useEffect(() => {
+    fetchTodos();
+  }, [fetchTodos]);
 
   const handleLogout = async () => {
     try {
@@ -46,12 +47,8 @@ export default function Dashboard() {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-10">
         <div>
           <h1 className="text-4xl font-extrabold tracking-tight">Dashboard</h1>
-          <p className="text-muted-foreground">
-            Manage your daily tasks and productivity.
-          </p>
         </div>
 
-        {/* Button Group */}
         <div className="flex items-center gap-3">
           <Button
             variant="outline"
@@ -63,9 +60,7 @@ export default function Dashboard() {
             Logout
           </Button>
 
-          <Button className="gap-2 hover:cursor-pointer">
-            <Plus className="h-4 w-4" /> Add Todo
-          </Button>
+          <TodoDialog mode="create" onSuccess={fetchTodos} />
         </div>
       </div>
 
@@ -82,8 +77,8 @@ export default function Dashboard() {
               <TodoCard
                 key={todo._id}
                 todo={todo}
-                onDelete={(id) => console.log("Delete", id)}
-                onEdit={(id) => console.log("Edit", id)}
+                
+                onRefresh={fetchTodos}
               />
             ))
           ) : (

@@ -1,4 +1,3 @@
-// src/components/TodoCard.tsx
 import {
   Card,
   CardHeader,
@@ -7,29 +6,28 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Trash2, Edit3, CheckCircle2, Circle } from "lucide-react";
-
-interface Todo {
-  _id: string;
-  title: string;
-  description: string;
-  isCompleted: boolean;
-  createdAt: string;
-}
+import { Trash2, CheckCircle2, Circle } from "lucide-react";
+import { TodoDialog } from "./TodoDialog"; 
+import type { Todo } from "@/lib/utils";
+import { deleteTodo } from "@/services/todo.service";
+import { toast } from "sonner";
 
 interface TodoCardProps {
   todo: Todo;
-  onEdit?: (id: string) => void;
-  onDelete?: (id: string) => void;
-  onToggleCompleted?: (id: string) => void;
+  onRefresh: () => void;
 }
 
-export function TodoCard({
-  todo,
-  onEdit,
-  onDelete,
-  onToggleCompleted,
-}: TodoCardProps) {
+export function TodoCard({ todo, onRefresh }: TodoCardProps) {
+  const handleDelete = async (id: string) => {
+    try {
+      await deleteTodo(id);
+      onRefresh();
+    } catch (error) {
+      toast.error("Could not delete todo");
+      console.error("Error deleting todo:", error);
+    }
+  };
+
   return (
     <Card
       className={todo.isCompleted ? "bg-muted/40 border-dashed" : "shadow-sm"}
@@ -44,24 +42,14 @@ export function TodoCard({
             {todo.title}
           </CardTitle>
           <p className="text-xs text-muted-foreground">
-            {new Date(todo.createdAt).toLocaleDateString("en-IN", {
-              day: "numeric",
-              month: "short",
-            })}
+            {new Date(todo.createdAt).toLocaleDateString()}
           </p>
         </div>
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => onToggleCompleted?.(todo._id)}
-          className="h-8 w-8 hover:text-destructive hover:cursor-pointer"
-        >
-          {todo.isCompleted ? (
-            <CheckCircle2 className="h-5 w-5 text-green-500 hover:cursor-pointer" />
-          ) : (
-            <Circle className="h-5 w-5 text-muted-foreground hover:cursor-pointer" />
-          )}
-        </Button>
+        {todo.isCompleted ? (
+          <CheckCircle2 className="h-5 w-5 text-green-500" />
+        ) : (
+          <Circle className="h-5 w-5 text-muted-foreground" />
+        )}
       </CardHeader>
 
       <CardContent>
@@ -70,20 +58,19 @@ export function TodoCard({
         </p>
       </CardContent>
 
-      <CardFooter className="flex justify-end gap-2 pt-0">
+      <CardFooter className="flex justify-end gap-1 pt-0">
+        {/* VIEW MODE */}
+        <TodoDialog mode="view" todo={todo} onSuccess={onRefresh} />
+
+        {/* UPDATE MODE */}
+        <TodoDialog mode="update" todo={todo} onSuccess={onRefresh} />
+
+        {/* DELETE BUTTON */}
         <Button
           variant="ghost"
           size="icon"
-          onClick={() => onEdit?.(todo._id)}
-          className="h-8 w-8 hover:text-primary hover:cursor-pointer"
-        >
-          <Edit3 className="h-4 w-4" />
-        </Button>
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => onDelete?.(todo._id)}
-          className="h-8 w-8 hover:text-destructive hover:cursor-pointer"
+          onClick={() => handleDelete(todo._id)}
+          className="h-8 w-8 hover:text-destructive"
         >
           <Trash2 className="h-4 w-4" />
         </Button>
