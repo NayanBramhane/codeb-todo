@@ -9,7 +9,6 @@ export async function loginService(data: LoginValues): Promise<boolean> {
     const response = await axios.post("/api/v1/users/login", data, {
       withCredentials: true, // for jwt
     });
-    console.log(response);
 
     toast.success(response.data.message || "Welcome back!");
     return true;
