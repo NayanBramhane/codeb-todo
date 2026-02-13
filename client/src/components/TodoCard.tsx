@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   Card,
   CardHeader,
@@ -6,10 +7,10 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Trash2, CheckCircle2, Circle } from "lucide-react";
-import { TodoDialog } from "./TodoDialog"; 
+import { Trash2, CheckCircle2, Circle, Loader2 } from "lucide-react";
+import { TodoDialog } from "./TodoDialog";
 import type { Todo } from "@/lib/utils";
-import { deleteTodo } from "@/services/todo.service";
+import { deleteTodo, updateTodo } from "@/services/todo.service"; // Import updateTodo
 import { toast } from "sonner";
 
 interface TodoCardProps {
@@ -18,13 +19,32 @@ interface TodoCardProps {
 }
 
 export function TodoCard({ todo, onRefresh }: TodoCardProps) {
+  const [isUpdating, setIsUpdating] = useState(false);
+
   const handleDelete = async (id: string) => {
     try {
       await deleteTodo(id);
       onRefresh();
     } catch (error) {
       toast.error("Could not delete todo");
-      console.error("Error deleting todo:", error);
+      console.error("Delete todo error:", error);
+    }
+  };
+
+  // Function to toggle completion status
+  const handleToggle = async () => {
+    setIsUpdating(true);
+    try {
+      await updateTodo(todo._id, { isCompleted: !todo.isCompleted });
+      onRefresh();
+      toast.success(
+        todo.isCompleted ? "Task marked as pending" : "Task completed!",
+      );
+    } catch (error) {
+      toast.error("Failed to update status");
+      console.error("Update todo error:", error);
+    } finally {
+      setIsUpdating(false);
     }
   };
 
@@ -45,11 +65,23 @@ export function TodoCard({ todo, onRefresh }: TodoCardProps) {
             {new Date(todo.createdAt).toLocaleDateString()}
           </p>
         </div>
-        {todo.isCompleted ? (
-          <CheckCircle2 className="h-5 w-5 text-green-500" />
-        ) : (
-          <Circle className="h-5 w-5 text-muted-foreground" />
-        )}
+
+        {/* Status Toggle Button */}
+        <Button
+          variant="ghost"
+          size="icon"
+          disabled={isUpdating}
+          onClick={handleToggle}
+          className="h-8 w-8 rounded-full hover:bg-transparent"
+        >
+          {isUpdating ? (
+            <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+          ) : todo.isCompleted ? (
+            <CheckCircle2 className="h-5 w-5 text-green-500 hover:scale-110 transition-transform" />
+          ) : (
+            <Circle className="h-5 w-5 text-muted-foreground hover:text-green-500 hover:scale-110 transition-transform" />
+          )}
+        </Button>
       </CardHeader>
 
       <CardContent>
@@ -59,13 +91,9 @@ export function TodoCard({ todo, onRefresh }: TodoCardProps) {
       </CardContent>
 
       <CardFooter className="flex justify-end gap-1 pt-0">
-        {/* VIEW MODE */}
         <TodoDialog mode="view" todo={todo} onSuccess={onRefresh} />
-
-        {/* UPDATE MODE */}
         <TodoDialog mode="update" todo={todo} onSuccess={onRefresh} />
 
-        {/* DELETE BUTTON */}
         <Button
           variant="ghost"
           size="icon"
