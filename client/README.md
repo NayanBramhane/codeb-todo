@@ -1,73 +1,59 @@
-# React + TypeScript + Vite
+# Todo Application - Frontend
+A modern, responsive Task Management dashboard built with React 19, TypeScript, and Shadcn/UI. This frontend communicates with a Node.js/Express backend to provide a seamless CRUD experience with advanced features like debounced searching and dynamic pagination.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Key Features
+- Secure Authentication: Integrated with a JWT-based backend for Login and Registration.
 
-Currently, two official plugins are available:
+- Dynamic Dashboard: A grid-based layout for managing tasks efficiently with specialized views for different item counts.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Smart Search: Implemented Debounced Search (500ms) with 3–100 character validation to optimize API calls.
 
-## React Compiler
+- State Management: Utilizes React Context API for global authentication state to persist user emails across the dashboard.
+### Advanced CRUD:
 
-The React Compiler is currently not compatible with SWC. See [this issue](https://github.com/vitejs/vite-plugin-react/issues/428) for tracking the progress.
+- Create: Modal-based task creation with Zod validation (minimum 3 characters).
 
-## Expanding the ESLint configuration
+- Read: Paginated view with adjustable rows-per-page (10, 25, 50, 100).
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- Update: Inline status toggling via interactive icons and full-detail editing via multi-purpose dialogs.
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- Delete: Instant removal of tasks with UI synchronization and callback refreshes.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+
+## Tech Stack
+- Framework: React 19 (Vite)
+
+- Language: TypeScript
+
+- Styling: Tailwind CSS & Shadcn/UI
+
+- Form Handling: React Hook Form & Zod
+
+- Icons: Lucide React
+
+- API Client: Axios with custom instances
+
+## Getting Started
+### Prerequisites
+- Node.js: v18 or higher
+
+- Backend: Ensure the Express server is running on http://localhost:3000
+
+### Installation
+
+- Clone and Install
+
 ```
+git clone <your-repo-url>
+cd todo-app/client
+npm install
+```
+- Configure Environment
+Ensure your vite.config.ts includes the proxy for /api to avoid CORS issues.
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+- Start Development
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```
+npm run dev
 ```
