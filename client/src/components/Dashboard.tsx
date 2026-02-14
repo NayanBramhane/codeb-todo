@@ -9,6 +9,13 @@ import type { Todo } from "@/lib/utils";
 import { logoutService } from "@/services/auth.service";
 import { useNavigate } from "react-router";
 import { TodoDialog } from "@/components/TodoDialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -16,20 +23,18 @@ export default function Dashboard() {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // State for Pagination & Search
+  // State for Pagination, Search & Limit
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [limit, setLimit] = useState("10");
   const [searchKeyword, setSearchKeyword] = useState("");
   const [debouncedKeyword, setDebouncedKeyword] = useState("");
 
-  // check if within 3-100 range (or empty)
-  const isSearchValid = 
-    searchKeyword.length === 0 || 
+  const isSearchValid =
+    searchKeyword.length === 0 ||
     (searchKeyword.length >= 3 && searchKeyword.length <= 100);
 
-  // Debounce logic
   useEffect(() => {
-    // Only update debounced keyword if validation passes
     if (isSearchValid) {
       const timer = setTimeout(() => {
         setDebouncedKeyword(searchKeyword);
@@ -42,7 +47,7 @@ export default function Dashboard() {
   const fetchTodos = useCallback(async () => {
     setLoading(true);
     try {
-      const data = await getTodos(currentPage, 9, debouncedKeyword);
+      const data = await getTodos(currentPage, Number(limit), debouncedKeyword);
       setTodos(data.todos);
       setTotalPages(data.totalPages || 1);
     } catch (error) {
@@ -51,7 +56,7 @@ export default function Dashboard() {
     } finally {
       setLoading(false);
     }
-  }, [currentPage, debouncedKeyword]);
+  }, [currentPage, debouncedKeyword, limit]);
 
   useEffect(() => {
     fetchTodos();
@@ -78,7 +83,7 @@ export default function Dashboard() {
             variant="outline"
             size="sm"
             onClick={handleLogout}
-            className="gap-2"
+            className="gap-2 hover:cursor-pointer"
           >
             <LogOut className="h-4 w-4" /> Logout
           </Button>
@@ -86,26 +91,50 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* Search Bar Section */}
-      <div className="mb-8">
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder="Search tasks..."
-            className={`pl-10 max-w-md ${!isSearchValid ? "border-destructive focus-visible:ring-destructive" : ""}`}
-            value={searchKeyword}
-            onChange={(e) => setSearchKeyword(e.target.value)}
-          />
+      {/* Search & Filter Bar Section */}
+      <div className="mb-8 flex flex-col sm:flex-row gap-4 items-end sm:items-center justify-between">
+        <div className="w-full max-w-md">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Search tasks..."
+              className={`pl-10 ${!isSearchValid ? "border-destructive focus-visible:ring-destructive" : ""}`}
+              value={searchKeyword}
+              onChange={(e) => setSearchKeyword(e.target.value)}
+            />
+          </div>
+          {!isSearchValid && (
+            <p className="text-destructive text-xs mt-1 transition-all">
+              {searchKeyword.length < 3
+                ? "Please enter at least 3 characters to search"
+                : "Search query is too long (max 100 characters)"}
+            </p>
+          )}
         </div>
-        
-        {/* Validation Error Message */}
-        {!isSearchValid && (
-          <p className="text-destructive text-xs mt-1 transition-all">
-            {searchKeyword.length < 3 
-              ? "Please enter at least 3 characters to search" 
-              : "Search query is too long (max 100 characters)"}
-          </p>
-        )}
+
+        {/* Limit Dropdown */}
+        <div className="flex items-center gap-2">
+          <span className="text-sm text-muted-foreground whitespace-nowrap">
+            Rows per page:
+          </span>
+          <Select
+            value={limit}
+            onValueChange={(value: string) => {
+              setLimit(value);
+              setCurrentPage(1); // Reset to first page when limit changes
+            }}
+          >
+            <SelectTrigger className="w-20 hover:cursor-pointer">
+              <SelectValue placeholder="10" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="10">10</SelectItem>
+              <SelectItem value="25">25</SelectItem>
+              <SelectItem value="50">50</SelectItem>
+              <SelectItem value="100">100</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
       </div>
 
       {/* Content Section */}
@@ -140,6 +169,7 @@ export default function Dashboard() {
                 size="icon"
                 disabled={currentPage === 1}
                 onClick={() => setCurrentPage((p) => p - 1)}
+                className="hover:cursor-pointer"
               >
                 <ChevronLeft className="h-4 w-4" />
               </Button>
@@ -151,6 +181,7 @@ export default function Dashboard() {
                 size="icon"
                 disabled={currentPage === totalPages}
                 onClick={() => setCurrentPage((p) => p + 1)}
+                className="hover:cursor-pointer"
               >
                 <ChevronRight className="h-4 w-4" />
               </Button>
