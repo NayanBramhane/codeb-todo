@@ -32,7 +32,7 @@ export const seedDatabase = async () => {
     const todos = [];
 
     for (const user of users) {
-      for (let i = 1; i <= 6; i++) {
+      for (let i = 1; i <= 26; i++) {
         todos.push({
           title: `Todo ${i} for ${user.email}`,
           description: `Sample description ${i}`,
