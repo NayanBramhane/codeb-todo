@@ -30,6 +30,7 @@ npm install
 - PORT=3000
 - MONGO_URI=your_mongodb_connection_string
 - JWT_SECRET=your_secret_key
+- CLIENT_URL=your_frontend_url
 ```
 npm run dev
 ```
