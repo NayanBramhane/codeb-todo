@@ -117,7 +117,7 @@ export default function Dashboard() {
         </div>
       ) : (
         <>
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 min-h-100">
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 min-h-150 items-start">
             {todos.length > 0 ? (
               todos.map((todo) => (
                 <TodoCard key={todo._id} todo={todo} onRefresh={fetchTodos} />
