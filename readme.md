@@ -30,12 +30,15 @@ npm install
 - PORT=3000
 - MONGO_URI=your_mongodb_connection_string
 - JWT_SECRET=your_secret_key
+```
+npm run dev
+```
 
 3. Frontend Setup
 ```
 cd client
 npm install
-npm run dev
+npm start
 ```
 ## API Proxy
 The frontend is configured to proxy requests from localhost:5173/api to localhost:3000 to handle CORS and simplify service calls.
