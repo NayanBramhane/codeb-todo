@@ -28,7 +28,7 @@ export class TodoListComponent implements OnInit {
   loadTodos() {
     this.todoService.getTodos().subscribe({
       next: (res) => this.todos.set(res.todos),
-      error: () => this.router.navigate(['/login']), // Redirect if unauthorized
+      error: () => this.router.navigate(['/login']),
     });
   }
 
@@ -39,7 +39,7 @@ export class TodoListComponent implements OnInit {
       .subscribe(() => {
         this.newTitle = '';
         this.newDescription = '';
-        this.loadTodos(); // Refresh list
+        this.loadTodos();
       });
   }
 

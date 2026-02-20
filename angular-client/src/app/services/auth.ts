@@ -7,7 +7,6 @@ export class AuthService {
   private http = inject(HttpClient);
   private apiUrl = 'http://localhost:3000/api/v1/users';
 
-  // Using Angular Signals to keep track of auth state
   isAuthenticated = signal<boolean>(false);
 
   register(data: any) {
