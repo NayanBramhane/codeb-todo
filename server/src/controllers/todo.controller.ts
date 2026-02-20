@@ -59,7 +59,8 @@ export const getTodo = async (
     }
 
     const [todos, totalTodos] = await Promise.all([
-      Todo.find(query).sort({ createdAt: -1 }).limit(limit).skip(skip),
+      Todo.find(query).sort({ createdAt: -1 }),
+      // Todo.find(query).sort({ createdAt: -1 }).limit(limit).skip(skip),
       Todo.countDocuments(query),
     ]);
 

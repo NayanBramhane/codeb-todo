@@ -19,6 +19,8 @@ export class TodoForm {
       // if (res.status == 201) {
       //   alert('Todo Created Successfully');
       // }
+      this.updateTodoTitle('');
+      this.updateTodoDesc('');
     } catch (error) {
       console.error('Error occured at TodoForm\n', error);
       alert('Error occurred while creating a Todo');
@@ -32,4 +34,6 @@ export class TodoForm {
   updateTodoDesc(desc: string) {
     this.todoDescription.set(desc);
   }
+
+  deleteTodo(id: string) {}
 }

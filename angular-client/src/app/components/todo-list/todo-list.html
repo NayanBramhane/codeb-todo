@@ -1,0 +1,25 @@
+<div class="todo-container">
+  <header>
+    <h2>My Todos</h2>
+    <button class="logout-btn" (click)="logout()">Logout</button>
+  </header>
+
+  <div class="add-todo">
+    <input type="text" [(ngModel)]="newTitle" placeholder="What needs to be done?" />
+    <input type="text" [(ngModel)]="newDescription" placeholder="Description (optional)" />
+    <button (click)="addTodo()">Add</button>
+  </div>
+
+  <ul class="todo-list">
+    <li *ngFor="let todo of todos()" [class.completed]="todo.isCompleted">
+      <div class="todo-content">
+        <input type="checkbox" [checked]="todo.isCompleted" (change)="toggleComplete(todo)" />
+        <div class="text">
+          <strong>{{ todo.title }}</strong>
+          <p *ngIf="todo.description">{{ todo.description }}</p>
+        </div>
+      </div>
+      <button class="delete-btn" (click)="deleteTodo(todo._id)">Delete</button>
+    </li>
+  </ul>
+</div>

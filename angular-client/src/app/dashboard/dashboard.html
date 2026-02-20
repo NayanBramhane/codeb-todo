@@ -1,12 +1,7 @@
 <div class="title"><h2>Todo App in Angular</h2></div>
 <div class="container">
   <app-todo-form></app-todo-form>
-  <app-card></app-card>
-  <app-card></app-card>
-  <app-card></app-card>
-  <app-card></app-card>
-  <app-card></app-card>
-  <app-card></app-card>
-  <app-card></app-card>
-  <app-card></app-card>
+  @for (todo of todos; track todo.id) {
+    <app-card></app-card>
+  }
 </div>

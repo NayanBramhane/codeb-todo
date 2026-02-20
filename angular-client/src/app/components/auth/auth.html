@@ -1,0 +1,18 @@
+<div class="auth-container">
+      <h2>{{ isLogin() ? 'Login' : 'Register' }}</h2>
+      <form (ngSubmit)="onSubmit()">
+        <input type="email" [(ngModel)]="email" name="email" placeholder="Email" required />
+        <input
+          type="password"
+          [(ngModel)]="password"
+          name="password"
+          placeholder="Password"
+          required
+        />
+        <button type="submit">{{ isLogin() ? 'Login' : 'Register' }}</button>
+      </form>
+      <p (click)="toggleMode()" class="toggle-text">
+        {{ isLogin() ? 'Need an account? Register' : 'Have an account? Login' }}
+      </p>
+      <p *ngIf="errorMessage()" class="error">{{ errorMessage() }}</p>
+    </div>

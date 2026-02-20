@@ -12,7 +12,7 @@ app.use(express.json()); // Body parser for JSON
 app.use(cookieParser()); // Cookie parser for JWT storage
 app.use(
   cors({
-    origin: process.env.CLIENT_URL || 'http://localhost:3000',
+    origin: process.env.CLIENT_URL || 'http://localhost:4200',
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true, // Required to send cookies back and forth
   }),
