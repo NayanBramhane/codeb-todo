@@ -1,14 +1,12 @@
 <div class="card-container">
   <div class="todo-title">
-    <input type="text" id="todo-title" />
+    <div id="todo-title"></div>
     <input type="checkbox" id="todo-completed" />
   </div>
-  <div class="todo-description">
-    <input type="text" id="todo-description" />
-  </div>
+  <div id="todo-description"></div>
   <div class="todo-buttons">
     <div class="button-container">
-      <button id="todo-view">View</button>
+      <button id="todo-view" (click)="view('id')">View</button>
       <button id="todo-edit">Edit</button>
       <button id="todo-delete">Delete</button>
     </div>

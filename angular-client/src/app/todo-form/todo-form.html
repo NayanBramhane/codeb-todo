@@ -1,0 +1,17 @@
+<form>
+  <label for="title">Title</label><br />
+  <input
+    type="text"
+    id="title"
+    [value]="todoTitle()"
+    (input)="updateTodoTitle($event.target.value)"
+  /><br />
+  <label for="description">Description</label><br />
+  <input
+    type="text"
+    id="description"
+    [value]="todoDescription()"
+    (input)="updateTodoDesc($event.target.value)"
+  /><br />
+  <button id="submit" (click)="handleSubmit($event)">Submit</button>
+</form>

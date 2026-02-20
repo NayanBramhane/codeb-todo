@@ -1,6 +1,6 @@
 .card-container {
   width: 25rem;
-  background-color: #ffd16f;
+  background-color: #ffebc0;
   height: 10rem;
   border-radius: 2rem;
   padding: 1rem;
@@ -18,16 +18,18 @@
 #todo-title {
   border-radius: 1rem;
   opacity: 75%;
+  border: 1px solid black;
 }
 
 #todo-title{
     width: 100%;
     margin-right: 1rem;
     height: 100%;
+    min-height: 2rem;
 }
 
-.todo-description {
-    height: 100%;
+#todo-description {
+    height: 50%;
 }
 
 .todo-buttons {
