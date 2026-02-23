@@ -11,15 +11,19 @@
   </div>
 
   <ul class="todo-list">
-    <li *ngFor="let todo of todos()" [class.completed]="todo.isCompleted">
-      <div class="todo-content">
-        <input type="checkbox" [checked]="todo.isCompleted" (change)="toggleComplete(todo)" />
-        <div class="text">
-          <strong>{{ todo.title }}</strong>
-          <p *ngIf="todo.description">{{ todo.description }}</p>
+    @for (todo of todos(); track todo._id) {
+      <li [class.completed]="todo.isCompleted">
+        <div class="todo-content">
+          <input type="checkbox" [checked]="todo.isCompleted" (change)="toggleComplete(todo)" />
+          <div class="text">
+            <strong>{{ todo.title }}</strong>
+            @if (todo.description) {
+              <p>{{ todo.description }}</p>
+            }
+          </div>
         </div>
-      </div>
-      <button class="delete-btn" (click)="deleteTodo(todo._id)">Delete</button>
-    </li>
+        <button class="delete-btn" (click)="deleteTodo(todo._id)">Delete</button>
+      </li>
+    }
   </ul>
 </div>
